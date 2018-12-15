@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define MaxSize 100
-#define MaxDigit 4 //关键字最有三位 
+#define MaxDigit 4 //关键字最多有四位 
 #define Radix 10 //基数为10
 #define ElemType int
 
@@ -17,7 +17,7 @@ struct SqlList {
 	int length; //待排序列的长度 
 };
 
-//桶元素的结点的存储结果 
+//桶元素的结点的存储结构 
 typedef struct BucketNode *PtrlBucketNode; //桶以链表的形式存储 
 struct BucketNode {
 	int key;
@@ -37,6 +37,7 @@ PtrlBucketNode InitialBucket(); //初始化一个桶
 void Connect(ElemType data, PtrlBucketNode Ptrl); //链接结点 
 void Insert_Array(PtrlSqlList P, ElemType K); //序列插入元素
 void PrintList(PtrlSqlList P, int count); //输出待排序列
+int GetListLength(PtrlSqlList P); //计算序列的长度
 int GetDigit(int K, int Down); //获得位数字  
 void Least_Significant_Digit_Sort(PtrlSqlList P, int N); //LSD次位优先基数排序
 void PrintBucketList(PtrlBucketNode PBL); //输出桶内元素
@@ -90,7 +91,7 @@ PtrlSqlList InitialList()
 	return P; 
 } 
 
-//链接结点
+//桶链接结点
 void Connect(ElemType data, PtrlBucketNode Ptrl) 
 {
 	PtrlBucketNode Ptrl1,Ptrl2;
@@ -109,7 +110,9 @@ void Connect(ElemType data, PtrlBucketNode Ptrl)
 	} else {
 		/*链表只有初始的那一个结点的话*/
 		Ptrl1=Ptrl2;
-	}	
+	}
+	
+	return;	
 }
 
 //序列插入元素
@@ -122,6 +125,8 @@ void Insert_Array(PtrlSqlList P, ElemType K)
 	}
 	P->arr[i]=K;
 	P->arr[i+1]=-1;
+	
+	return;
 } 
 
 //输出序列
@@ -227,7 +232,7 @@ void Least_Significant_Digit_Sort(PtrlSqlList P, int N)
 			Di=GetDigit(p->key, D); 
 			tmp=p;
 			p=p->Next; 
-			//对一个元素排完序后,把该元素从List链表中删除 
+			//取得位数字后,把该元素从List链表中删除 
 			tmp->Next=NULL;
 			//获得数位后,插入到B[Di]桶里
 			//特殊情况判断如果桶B[Di]的链表为空
@@ -247,12 +252,12 @@ void Least_Significant_Digit_Sort(PtrlSqlList P, int N)
 		}	
 		
 		//做完一趟桶排序后,收集桶数组B中的元素
-		List=NULL; //List作为桶链表头 
-		if (B[0].Head) {
-			List=B[0].Head;
-		} else {
-			List=B[1].Head;
-		}
+//		List=NULL; //List作为桶链表头 
+//		if (B[0].Head) {
+//			List=B[0].Head;
+//		} else {
+//			List=B[1].Head;
+//		}
 		
 		//做完一趟桶排序后,收集桶数组B中的元素
 		List=NULL; //List作为桶链表头 
@@ -278,5 +283,7 @@ void Least_Significant_Digit_Sort(PtrlSqlList P, int N)
 		List=List->Next;
 		P->arr[i]=tmp->key;
 		free(tmp);
-	}  
+	} 
+	
+	return; 
 }
